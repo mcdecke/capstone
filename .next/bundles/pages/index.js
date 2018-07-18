@@ -1,7 +1,7 @@
 module.exports =
 __NEXT_REGISTER_PAGE('/', function() {
           var comp =
-      webpackJsonp([6],{
+      webpackJsonp([4],{
 
 /***/ "./node_modules/any-promise/index.js":
 /***/ (function(module, exports, __webpack_require__) {
@@ -2140,7 +2140,7 @@ function fromByteArray (uint8) {
 
   var Buffer;
   try {
-    Buffer = __webpack_require__(8).Buffer;
+    Buffer = __webpack_require__(6).Buffer;
   } catch (e) {
   }
 
@@ -5578,7 +5578,7 @@ if (typeof self === 'object') {
 } else {
   // Node.js or Web worker with no crypto support
   try {
-    var crypto = __webpack_require__(9);
+    var crypto = __webpack_require__(7);
     if (typeof crypto.randomBytes !== 'function')
       throw new Error('Not supported');
 
@@ -28727,7 +28727,7 @@ util.inherits = __webpack_require__("./node_modules/inherits/inherits_browser.js
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(6);
+var debugUtil = __webpack_require__(4);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -30604,7 +30604,7 @@ Writable.prototype._destroy = function (err, cb) {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Buffer = __webpack_require__("./node_modules/safe-buffer/index.js").Buffer;
-var util = __webpack_require__(7);
+var util = __webpack_require__(5);
 
 function copyBuffer(src, target, offset) {
   src.copy(target, offset);
@@ -56831,11 +56831,25 @@ if (typeof window !== 'undefined' && typeof window.web3 !== 'undefined') {
 
 /***/ }),
 
-/***/ 5:
+/***/ 3:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__("./pages/index.js");
 
+
+/***/ }),
+
+/***/ 4:
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+
+/***/ 5:
+/***/ (function(module, exports) {
+
+/* (ignored) */
 
 /***/ }),
 
@@ -56851,23 +56865,9 @@ module.exports = __webpack_require__("./pages/index.js");
 
 /* (ignored) */
 
-/***/ }),
-
-/***/ 8:
-/***/ (function(module, exports) {
-
-/* (ignored) */
-
-/***/ }),
-
-/***/ 9:
-/***/ (function(module, exports) {
-
-/* (ignored) */
-
 /***/ })
 
-},[5])
+},[3])
           return { page: comp.default }
         })
       ;
