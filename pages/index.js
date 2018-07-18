@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import {Card, Button} from 'semantic-ui-react'
+
 // import logo from './logo.svg';
 // import './App.css';
 // import web3 from '../src/web3'
@@ -14,19 +16,30 @@ import React, {Component} from 'react';
 // const CryptoJS = require("crypto-js")
 
 import factory from '../src/ethereum/factory.js'
+import Layout from '../src/components/Layout'
 
 class App extends Component {
 
-  state = {
-    address: '', //'0x...'
-    message: 'Click a button to get started',
-    encryptedPasswords: 'encrypted',
-    decryptedPasswords: [],
-    qrCode: '',
-    passwordList: []
+  // state = {
+  //   address: '', '0x...'
+  //   message: 'Click a button to get started',
+  //   encryptedPasswords: 'encrypted',
+  //   decryptedPasswords: [],
+  //   qrCode: '',
+  //   passwordList: []
+  // }
+
+  //next.js thing --static helps w/ rendering?
+  //getInitialProps instead of state?
+  static async getInitialProps() {
+    const passwordBlocks = await factory.methods.getDeployedPasswordBlocks().call()
+
+    //returns object as props
+    return {passwordBlocks}
   }
+
   //
-  // //updates eth address and adds qr code
+  // updates eth address and adds qr code
   // onSubmit = async (event) => {
   //   event.preventDefault()
   //   const accounts = await web3.eth.getAccounts();
@@ -44,17 +57,17 @@ class App extends Component {
   //
   // encrypt = async (event) => {
   //   event.preventDefault()
-  //   //get elements from form
+  //   get elements from form
   //   const name = document.getElementById('name').value
   //   const password = document.getElementById('password').value
   //   const superSecretKey = document.getElementById('privateKey').value
   //
-  //   //create data from elements
+  //   create data from elements
   //   const data = JSON.stringify(this.state.passwordList)
   //   const data2 = this.state.passwordList.toString()
   //
   //   console.log(data+`+`+data2);
-  //   //create strigified encrypted passwords
+  //   create strigified encrypted passwords
   //   let ciphertext = CryptoJS.AES.encrypt(data, superSecretKey).toString();
   //   console.log(ciphertext);
   //   this.setState({encryptedPasswords: ciphertext})
@@ -90,21 +103,31 @@ class App extends Component {
   //   this.setState({passwordList: passwordList})
   // }
 
-  async componentDidMount(){
-    console.log('hi');
-    const passwordBlocks = await factory.methods.getDeployedPasswordBlocks().call()
+  // async componentDidMount() {
+  //   console.log('hi');
+  //   console.log(passwordBlocks[0])
+  // }
 
-    console.log(passwordBlocks[0])
-    this.setState({passwordList: passwordBlocks[0]})
+  renderPasswordBlocks() {
+    const items = this.props.passwordBlocks.map(address => {
+      return {
+        header: address, description: <a>View Password Block</a>,
+        //fluid makes the card flow all the way to the right.
+        fluid: true
+      }
+    })
+    return <Card.Group items={items}/>
   }
 
   render() {
     return (
-    <div>
-      HULLO URF
-      <br></br>
-      {this.state.passwordList}
-    </div>
+      <Layout>
+        <div>
+          <h3>Password Blocks</h3>
+          <Button floated="right" content="Create Password Block" icon="add circle" primary="primary"/>
+          {this.renderPasswordBlocks()}
+        </div>
+      </Layout>
     )
   }
 }
