@@ -41,4 +41,15 @@ contract PasswordBlock {
       });
       encryptedBlock.push(newEncryptedBlock);
   }
+
+  /* function getSummary(string description, string encrypted) public view returns (
+    string, string, address
+    ) {
+      return (
+          description,
+          encrypted,
+          manager
+    );
+  } */
+
 }
