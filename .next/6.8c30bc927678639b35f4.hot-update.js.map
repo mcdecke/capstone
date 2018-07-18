@@ -1,0 +1,1 @@
+{"version":3,"file":"6.8c30bc927678639b35f4.hot-update.js","sources":["webpack:///src/ethereum/web3.js"],"sourcesContent":["import Web3 from 'web3'\n\n// const web3 = new Web3(window.web3.currentProvider)\n\nlet web3\n\nexport default web3\n\n\n\n// WEBPACK FOOTER //\n// src/ethereum/web3.js"],"mappings":";;;;;;AAAA;AAAA;AAAA;AACA;AAGA;AAEA;;;;A","sourceRoot":""}

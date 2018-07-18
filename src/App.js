@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
-import './App.css';
+// import logo from './logo.svg';
+// import './App.css';
 import web3 from './web3'
 import Passwords from './components/Passwords'
 import Encrypt from './components/Encrypt'
