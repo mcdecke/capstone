@@ -3,9 +3,10 @@ import {Form, Button, Input, Message} from 'semantic-ui-react'
 import Layout from '../../src/components/Layout'
 import factory from '../../src/ethereum/factory'
 import web3 from '../../src/ethereum/web3'
+import {Link, Router } from '../../routes'
 
 class NewPassBlock extends Component {
-  
+
   state = {
     description: '',
     errorMessage: '',
@@ -24,6 +25,7 @@ class NewPassBlock extends Component {
       //could rewrite smart contract to have default values, instead of creating the block then populating it.
       // .createPasswordBlock(this.state.description)
         .createPasswordBlock().send({from: accounts[0]})
+        Router.pushRoute('/')
     } catch (err) {
       this.setState({errorMessage: err.message})
     }

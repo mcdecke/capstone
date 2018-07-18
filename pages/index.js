@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {Card, Button} from 'semantic-ui-react'
+import { Link } from '../routes'
 
 // import logo from './logo.svg';
 // import './App.css';
@@ -111,7 +112,12 @@ class App extends Component {
   renderPasswordBlocks() {
     const items = this.props.passwordBlocks.map(address => {
       return {
-        header: address, description: <a>View Password Block</a>,
+        header: address,
+        description: (
+          <Link route={`/passwordBlocks/${address}`}>
+            <a>View Password Block</a>
+          </Link>
+        ),
         //fluid makes the card flow all the way to the right.
         fluid: true
       }
@@ -124,8 +130,12 @@ class App extends Component {
       <Layout>
         <div>
           <h3>Password Blocks</h3>
-          <Button floated="right" content="Create Password Block" icon="add circle" primary="primary"/>
-          {this.renderPasswordBlocks()}
+          <Link route="/passwordBlocks/new">
+            <a>
+              <Button floated="right" content="Create Password Block" icon="add circle" primary/>
+            </a>
+          </Link>
+        {this.renderPasswordBlocks()}
         </div>
       </Layout>
     )
