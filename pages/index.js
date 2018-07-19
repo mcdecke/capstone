@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Card, Button} from 'semantic-ui-react'
 import { Link } from '../routes'
-
+import blockies from 'ethereum-blockies'
 // import logo from './logo.svg';
 // import './App.css';
 // import web3 from '../src/web3'
@@ -110,16 +110,30 @@ class App extends Component {
   // }
 
   renderPasswordBlocks() {
+
     const items = this.props.passwordBlocks.map(address => {
       return {
-        header: address,
+        header: (
+          <div>
+            ${address}
+            <br></br>
+            <br></br>
+            <img
+              src={`https://eth.vanity.show/${address}`}
+              alt={`Identicon of ether address ${address}`}
+            />
+            <br></br>
+            <br></br>
+          </div>
+        ),
         description: (
           <Link route={`/passwordBlocks/${address}`}>
             <a>View Password Block</a>
           </Link>
         ),
         //fluid makes the card flow all the way to the right.
-        fluid: true
+        fluid: true,
+        style: {overflowWrap: 'break-word'}
       }
     })
     return <Card.Group items={items}/>

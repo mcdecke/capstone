@@ -3,60 +3,73 @@ import {Form, Button, Input, Message} from 'semantic-ui-react'
 import Layout from '../../src/components/Layout'
 import factory from '../../src/ethereum/factory'
 import web3 from '../../src/ethereum/web3'
-import {Link, Router } from '../../routes'
+import {Link, Router} from '../../routes'
 
 class NewPassBlock extends Component {
 
   state = {
     description: '',
     errorMessage: '',
-    loading: false
+    loading: false,
+    passwords: []
+  }
+
+  renderPassword() {
+
+    console.log(this.state.description+'+'+this.state.password);
+
+    const password =
+    {
+      header: this.state.description,
+      meta: "TMetadata",
+      description: this.state.password,
+      style: {overflowWrap: 'break-word'}
+    }
   }
 
   onSubmit = async (event) => {
     event.preventDefault()
-
+    // this.renderPassword()
     this.setState({loading: true, errorMessage: ''})
-
-    let e = PasswordFactory.ContractCreated(function(error, result){
-      if(!error)
-        console.log(result);
-    })
 
     try {
       const accounts = await web3.eth.getAccounts()
       console.log(accounts[0]);
 
-      await factory.methods
-      //could rewrite smart contract to have default values, instead of creating the block then populating it.
-      // .createPasswordBlock(this.state.description)
-        .createPasswordBlock().send({from: accounts[0]}
-        //   , function(err, transactionHash) {
-        //   if (!err)
-        //     console.log(transactionHash);
-        // }
-      )
-        // Router.pushRoute('/')
+      await factory.methods.createPasswordBlock(this.state.description, this.state.password).send({from: accounts[0]})
+      //   , function(err, transactionHash) {
+      //   if (!err)
+      //     console.log(transactionHash);
+      // })
+      Router.pushRoute('/')
     } catch (err) {
       this.setState({errorMessage: err.message})
     }
-
     this.setState({loading: false})
   }
 
   render() {
     return (<Layout>
-      <h3>Create a New Password Block
-      </h3>
-
+      <h3>Create a New Password Block</h3>
       <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
+        <Form.Field>
+          <label>Add a Description for the Password Block</label>
+          <Input label="Block Description" labelPosition="right" value={this.state.blockDescription} onChange={event => this.setState({blockDescription: event.target.value})}/>
+        </Form.Field>
+
         <Form.Field>
           <label>Add a Description</label>
           <Input label="Description" labelPosition="right" value={this.state.description} onChange={event => this.setState({description: event.target.value})}/>
         </Form.Field>
 
+        <Form.Field>
+          <label>Add Password</label>
+          <Input label="Password" labelPosition="right" value={this.state.password} onChange={event => this.setState({password: event.target.value})}/>
+        </Form.Field>
+
         <Message error="error" header="Oops!" content={this.state.errorMessage}/>
-        <Button loading={this.state.loading} primary="primary">Create!</Button>
+        <Button loading={this.state.loading} primary="primary">Add Password!</Button>
+        {/* <Button loading={this.state.loading} primary="primary">Create!</Button> */}
       </Form>
 
     </Layout>)

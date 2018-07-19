@@ -90,7 +90,7 @@
 /******/ 	
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "bf048ebdbbffe01201f7"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "6f4aa93cc90827c3650a"; // eslint-disable-line no-unused-vars
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule; // eslint-disable-line no-unused-vars
@@ -755,7 +755,7 @@
 /******/ 		if (__webpack_require__.nc) {
 /******/ 			script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 		}
-/******/ 		script.src = __webpack_require__.p + "" + ({"0":"main.js","1":"bundles/pages/_error.js","2":"bundles/pages/_app.js","4":"bundles/pages/passwordBlocks/new.js"}[chunkId]||chunkId) + ".js";
+/******/ 		script.src = __webpack_require__.p + "" + ({"0":"main.js","1":"bundles/pages/_error.js","2":"bundles/pages/_app.js","6":"bundles/pages/passwordBlocks/show.js","7":"bundles/pages/passwordBlocks/Edit.js"}[chunkId]||chunkId) + ".js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
 /******/ 		function onScriptComplete() {

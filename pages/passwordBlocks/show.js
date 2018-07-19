@@ -1,57 +1,135 @@
 import React, {Component} from 'react'
-import { Card } from 'semantic-ui-react'
+import { Card, Grid, Button, Table } from 'semantic-ui-react'
 import Layout from '../../src/components/Layout'
 import PasswordBlock from '../../src/ethereum/passwordBlock'
+import EditForm from '../../src/components/EditForm'
+import { Link } from '../../routes'
+import RenderRow from '../../src/components/RenderRow'
 
 class ShowPassBlock extends Component {
 
   static async getInitialProps(props) {
-    const block = PasswordBlock(props.query.address)
-    console.log(block.methods);
-    const summary = await block.methods.encryptedBlock(0).call()
+    const {address} = await props.query
+    const block = await PasswordBlock(address)
+    const manager = await block.methods.manager().call();
+    const passwordBlock = await PasswordBlock(address)
+    const blockCount = await passwordBlock.methods.getBlockCount().call()
 
-    console.log(summary);
-
-    if(!summary) {
-      return {
-        description: 'Password Block',
-        encrypted: 'gobbledegook'
-      }
-    }
+    const blocks = await Promise.all(
+      Array(parseInt(blockCount)).fill().map((element, index) => {
+        return passwordBlock.methods.encryptedBlock(index).call()
+      })
+    )
 
     return {
-      description: summary[0],
-      encrypted: summary[1]
+      address: address,
+      manager: manager,
+      blocks: blocks
     }
   }
 
-  renderBlocks() {
-    const {
-      description,
-      encrypted
-    } = this.props
 
-    console.log(description+`!+!`+encrypted);
 
-    const items = [{
-      header: description,
-      meta: encrypted,
-      data: 'Encrypted Passwords'
-    }]
-
-    console.log(items);
-
-    return <Card.Group items={items}/>
+  renderRow() {
+    return this.props.blocks.map((block, index) => {
+      console.log(block);
+      return <RenderRow
+        block={block}
+        key={index}
+        id={index}
+        address={this.props.address}
+      />
+    })
   }
 
   render() {
+    const { Header, Row, HeaderCell, Body} = Table;
+
     return (
       <Layout>
         <h3>Show Block</h3>
-        {this.renderBlocks()}
+        <Table>
+          <Header>
+            <Row>
+              <HeaderCell>ID</HeaderCell>
+              <HeaderCell>Description</HeaderCell>
+              <HeaderCell>Data</HeaderCell>
+              <HeaderCell>Edit</HeaderCell>
+            </Row>
+          </Header>
+          <Body>
+            {this.renderRow()}
+          </Body>
+        </Table>
       </Layout>
     )
   }
 }
 
 export default ShowPassBlock
+
+
+
+
+
+// renderBlocks() {
+//
+//   const {
+//     address,
+//     manager,
+//     blocks
+//   } = this.props
+//
+//   console.log(blocks);
+//   console.log(manager);
+//   console.log(address);
+//
+
+//   const items = [
+//     {
+//     header: 'Address of Owner',
+//     meta: "The owner created and can edit this password block.",
+//     description: manager,
+//     style: {overflowWrap: 'break-word'}
+//   },
+//   {
+//     header: 'Description',
+//     meta: 'What these passwords are',
+//     description: description,
+//     style: {overflowWrap: 'break-word'}
+//   },
+//   {
+//     header: 'Encrypted Data',
+//     meta: 'Redundant Meta Data',
+//     description: encrypted,
+//     style: {overflowWrap: 'break-word'}
+//   }
+// ]
+  // console.log(items);
+  // return <Card.Group items={items}/>
+// }
+
+/*
+  <Grid>
+    <Grid.Row>
+      <Grid.Column width={10}>
+        {this.renderBlocks()}
+      </Grid.Column>
+
+
+      <Grid.Column width={6}>
+        <EditForm address={this.props.address} />
+      </Grid.Column>
+    </Grid.Row>
+
+    <Grid.Row>
+      <Grid.Column>
+        <Link route={`/passwordBlocks/${this.props.address}/edit`}>
+          <a>
+            <Button primary>Edit Block</Button>
+          </a>
+        </Link>
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
+*/
