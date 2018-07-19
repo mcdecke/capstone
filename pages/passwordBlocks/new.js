@@ -14,33 +14,13 @@ class NewPassBlock extends Component {
     passwords: []
   }
 
-  renderPassword() {
-
-    console.log(this.state.description+'+'+this.state.password);
-
-    const password =
-    {
-      header: this.state.description,
-      meta: "TMetadata",
-      description: this.state.password,
-      style: {overflowWrap: 'break-word'}
-    }
-  }
-
   onSubmit = async (event) => {
     event.preventDefault()
-    // this.renderPassword()
     this.setState({loading: true, errorMessage: ''})
-
     try {
       const accounts = await web3.eth.getAccounts()
       console.log(accounts[0]);
-
       await factory.methods.createPasswordBlock(this.state.description, this.state.password).send({from: accounts[0]})
-      //   , function(err, transactionHash) {
-      //   if (!err)
-      //     console.log(transactionHash);
-      // })
       Router.pushRoute('/')
     } catch (err) {
       this.setState({errorMessage: err.message})
@@ -49,7 +29,8 @@ class NewPassBlock extends Component {
   }
 
   render() {
-    return (<Layout>
+    return (
+    <Layout>
       <h3>Create a New Password Block</h3>
       <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
         <Form.Field>
@@ -69,10 +50,9 @@ class NewPassBlock extends Component {
 
         <Message error="error" header="Oops!" content={this.state.errorMessage}/>
         <Button loading={this.state.loading} primary="primary">Add Password!</Button>
-        {/* <Button loading={this.state.loading} primary="primary">Create!</Button> */}
       </Form>
-
-    </Layout>)
+    </Layout>
+    )
   }
 }
 
