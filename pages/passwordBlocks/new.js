@@ -33,10 +33,10 @@ class NewPassBlock extends Component {
     <Layout>
       <h3>Create a New Password Block</h3>
       <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
-        <Form.Field>
+        {/* <Form.Field>
           <label>Add a Description for the Password Block</label>
           <Input label="Block Description" labelPosition="right" value={this.state.blockDescription} onChange={event => this.setState({blockDescription: event.target.value})}/>
-        </Form.Field>
+        </Form.Field> */}
 
         <Form.Field>
           <label>Add a Description</label>

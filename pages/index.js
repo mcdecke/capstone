@@ -66,17 +66,20 @@ class App extends Component {
   //   create data from elements
   //   const data = JSON.stringify(this.state.passwordList)
   //   const data2 = this.state.passwordList.toString()
-  //
   //   console.log(data+`+`+data2);
   //   create strigified encrypted passwords
   //   let ciphertext = CryptoJS.AES.encrypt(data, superSecretKey).toString();
   //   console.log(ciphertext);
   //   this.setState({encryptedPasswords: ciphertext})
   // }
-  //
+
+
+/////////
+//in renderRow
+///////
+
   // decrypt = async (e) => {
   //   e.preventDefault()
-  //
   //   const superSecretKey = document.getElementById('superSecretInput').value
   //   let ciphertext = document.getElementById('decrypt').value
   //   console.log(ciphertext);
@@ -88,6 +91,7 @@ class App extends Component {
   //
   //   this.setState({decryptedPasswords: decryptedData})
   // }
+
   //
   // addPassword = async(e) => {
   //   e.preventDefault()

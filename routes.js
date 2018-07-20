@@ -6,7 +6,7 @@ routes
   //edit a password block
   .add('/passwordBlocks/:address/:id/edit', 'passwordBlocks/Edit/index')
   //nothing of use here
-  .add('/passwordBlocks/:address/edit/new', '/passwordBlocks/Edit/new')
+  .add('/passwordBlocks/:address/:id/edit/new', '/passwordBlocks/Edit/new')
   //new password block
   .add('/passwordBlocks/:address/new', '/passwordBlocks/new')
 

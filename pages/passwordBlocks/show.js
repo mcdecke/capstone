@@ -29,7 +29,6 @@ class ShowPassBlock extends Component {
   }
 
 
-
   renderRow() {
     return this.props.blocks.map((block, index) => {
       console.log(block);
