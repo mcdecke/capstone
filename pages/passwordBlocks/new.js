@@ -4,6 +4,7 @@ import Layout from '../../src/components/Layout'
 import factory from '../../src/ethereum/factory'
 import web3 from '../../src/ethereum/web3'
 import {Link, Router} from '../../routes'
+const CryptoJS = require("crypto-js")
 
 class NewPassBlock extends Component {
 
@@ -12,7 +13,9 @@ class NewPassBlock extends Component {
     errorMessage: '',
     loading: false,
     passwordCount: 1,
-    passwordList: []
+    passwordList: [],
+    encryptedPasswords: '',
+    seed: ''
   }
 
   onAddPassword = (e) => {
@@ -25,54 +28,94 @@ class NewPassBlock extends Component {
     for (var i = 0; i < this.state.passwordCount - 1; i++) {
       console.log(this.state.passwordCount);
       this.state.passwordList[i + 1] = (
-      <div className='PassDesc'>
+      <div>
       <Form.Field>
         <label>Add a Description</label>
-        <Input label="Description" labelPosition="right"/>
+        <Input id={`Desc${i+1}`} label="Description" labelPosition="right"/>
       </Form.Field>
 
       <Form.Field>
         <label>Add Password</label>
-        <Input label="Password" labelPosition="right"/>
+        <Input id={`Pass${i+1}`} label="Password" labelPosition="right"/>
       </Form.Field>
     </div>
     )
     }
   }
 
-  onSubmit = async (event) => {
+
+  encrypt = async (arr) => {
     event.preventDefault()
+    // get seed from form
+    const superSecretKey = this.state.seed
+    // document.getElementById('privateKey').value
+    console.log(superSecretKey);
+    console.log(this.state.seed);
+    //create data from elements
+    const data = JSON.stringify(arr)
+    //create strigified encrypted passwords
+    let ciphertext = CryptoJS.AES.encrypt(data, superSecretKey).toString();
+
+    console.log(ciphertext);
+    // this.setState({encryptedPasswords: ciphertext})
+
     this.setState({loading: true, errorMessage: ''})
+
     try {
       const accounts = await web3.eth.getAccounts()
       console.log(accounts[0]);
-      await factory.methods.createPasswordBlock(this.state.description, this.state.password).send({from: accounts[0]})
-      Router.pushRoute('/')
+      await factory.methods.createPasswordBlock("Add General Description", ciphertext).send({from: accounts[0]})
+      Router.pushRoute(`/passwordBlocks/${accounts[0]}`)
     } catch (err) {
       this.setState({errorMessage: err.message})
     }
     this.setState({loading: false})
+
+  }
+
+  onSubmit = async (event) => {
+    event.preventDefault()
+
+    let descriptions = []
+    let passwords = []
+    let toBeEncrypted = []
+
+    console.log(this.state.seed);
+
+    for (var i = 0; i < this.state.passwordCount; i++) {
+      console.log(this.state.passwordCount);
+      console.log(document.getElementById(`Desc${i}`).value);
+      descriptions[i] = await document.getElementById(`Desc${i}`).value
+      passwords[i] = await document.getElementById(`Pass${i}`).value
+      toBeEncrypted[i] = [`${descriptions[i]}: ${passwords[i]}`]
+    }
+    console.log(toBeEncrypted);
+
+    this.encrypt(toBeEncrypted)
+
   }
 
   render() {
 
     return (<Layout>
       <h3>Create a New Password Block</h3>
-      <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}>
+      <Form onSubmit={this.onSubmit} error={!!this.state.errorMessage}
+      className='FORM'
+        >
 
-        <div className='PassDesc'>
+      <div>
         <Form.Field>
           <label>Add a Description</label>
-          <Input label="Description" labelPosition="right"/>
+          <Input id='Desc0' label="Description" labelPosition="right"/>
         </Form.Field>
 
         <Form.Field>
           <label>Add Password</label>
-          <Input label="Password" labelPosition="right"/>
+          <Input id='Pass0' label="Password" labelPosition="right"/>
         </Form.Field>
       </div>
 
-        <div addPassword={this.props.addPassword}>
+        <div >
           {this.state.passwordList}
         </div>
 
@@ -81,6 +124,18 @@ class NewPassBlock extends Component {
 
         <Message error="error" header="Oops!" content={this.state.errorMessage}/>
         <br></br>
+        <br></br>
+        <Form.Field>
+          <label>Seed</label>
+          <Input
+            value={this.state.seed}
+            onChange={event => {
+              this.setState({seed: event.target.value})
+              console.log(this.state.seed);
+            }
+          }
+          />
+        </Form.Field>
         <br></br>
         <br></br>
         <Button loading={this.state.loading} primary="primary">Encrypt Passwords!</Button>

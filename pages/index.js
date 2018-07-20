@@ -39,8 +39,8 @@ class App extends Component {
     return {passwordBlocks}
   }
 
-  //
-  // updates eth address and adds qr code
+
+  //// updates eth address and adds qr code
   // onSubmit = async (event) => {
   //   event.preventDefault()
   //   const accounts = await web3.eth.getAccounts();
