@@ -16,7 +16,10 @@ class EditBlock extends Component {
     loading: false,
     password: '',
     seed: '',
-    decryptedPasswords: ''
+    decryptedPasswords: '',
+    edit: 'Edit',
+    disabled: true,
+    passwordRows: 1
   }
 
 static async getInitialProps(props){
@@ -35,7 +38,6 @@ static async getInitialProps(props){
   // console.log(id);
   // console.log(thisBlock);
   // console.log(passwordBlock.methods);
-
   return { address, thisBlock, id, passwordBlock}
 }
 
@@ -53,7 +55,27 @@ decrypt = async (e) => {
   this.setState({decryptedPasswords: decryptedData})
 }
 
+submitter = (e, x) => {
+  e.preventDefault()
+  console.log(this.state.edit);
+  if (this.state.edit === 'Edit'){
+    this.setState({edit: 'Save'})
+  } else if (this.state.edit === 'Save'){
+    this.setState({edit: 'Edit'})
+  }
+  this.setState({disabled: !this.state.disabled})
+}
 
+onSave = (e) => {
+  e.preventDefault()
+
+  ///////
+  // Get elements.value by class, string 'em together'
+
+  // encrypt new stringaling
+
+  //save to correct location
+}
 
 onSubmit = async (event) => {
   // console.log(this.props.thisBlock[]);
@@ -104,12 +126,15 @@ console.log('about to try');
 
 
           <Message error="error" header="Oops!" content={this.state.errorMessage}/>
-          <Button loading={this.state.loading} primary="primary">Edit Block!</Button>
+          <Button loading={this.state.loading} primary="primary">Decrypt Block!</Button>
         </Form>
 
         <Password
           description='description goes here'
           password={this.state.decryptedPasswords}
+          submitter={this.submitter}
+          disabled ={this.state.disabled}
+          edit={this.state.edit}
         />
 
       </Layout>
