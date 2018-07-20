@@ -14,7 +14,7 @@ import blockies from 'ethereum-blockies'
 // const SHA256 = require("crypto-js/sha256");
 // const QRCode = require('qrcode')
 // const canvas = document.getElementById('canvas')
-// const CryptoJS = require("crypto-js")
+const CryptoJS = require("crypto-js")
 
 import factory from '../src/ethereum/factory.js'
 import Layout from '../src/components/Layout'
@@ -75,7 +75,7 @@ class App extends Component {
 
 
 /////////
-//in renderRow
+//in passwordBlocks/Edit/index.js
 ///////
 
   // decrypt = async (e) => {

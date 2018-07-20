@@ -1,19 +1,24 @@
 import React, {Component} from 'react'
-import '../App.css';
-// import EditPassword from './EditPassword'
+import {Button, Card} from 'semantic-ui-react'
 
-
-const Password = ({password, name}) =>  {
-  console.log(name, password);
+const Password = ({description, password}) =>  {
   return (
-      <div className='pwd'>
-        Name: {name}
-        <br></br>
-        <br></br>
-        Password: {password}
-        <br></br>
-        <br></br>
-      </div>
+    <Card>
+      <Card.Content>
+        <Card.Header>{description}</Card.Header>
+        <Card.Meta>{password}</Card.Meta>
+      </Card.Content>
+      <Card.Content extra>
+        <div className='ui two buttons'>
+          <Button basic color='green'>
+            Edit
+          </Button>
+          <Button basic color='red'>
+            Delete
+          </Button>
+        </div>
+      </Card.Content>
+    </Card>
   )
 }
 
