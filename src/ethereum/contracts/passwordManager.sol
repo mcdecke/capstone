@@ -27,10 +27,10 @@ contract PasswordBlock {
   EncryptedBlock[] public encryptedBlock;
     address public manager;
 
-//   modifier restricted() {
-//     require(msg.sender == manager);
-//     _;
-//   }
+  modifier restricted() {
+    require(msg.sender == manager);
+    _;
+  }
 
 //   function Managed (address sender) restricted {
 //     manager = sender;
@@ -39,7 +39,7 @@ contract PasswordBlock {
 
 
 
-  function PasswordBlock(string description, string encrypted, address hooman) public /*restricted Managed(msg.sender)*/ {
+  function PasswordBlock(string description, string encrypted, address hooman) public /* Managed(msg.sender) */ {
     //   Managed(msg.sender);
     manager = hooman;
     EncryptedBlock memory newEncryptedBlock = EncryptedBlock({
@@ -50,7 +50,7 @@ contract PasswordBlock {
   }
 
 
-  function newPasswordBlock(string description, string encrypted) public /*restricted Managed(msg.sender)*/ {
+  function newPasswordBlock(string description, string encrypted) public restricted /*Managed(msg.sender)*/ {
     //   Managed(msg.sender);
     EncryptedBlock memory newEncryptedBlock = EncryptedBlock({
       description: description,
@@ -59,7 +59,7 @@ contract PasswordBlock {
       encryptedBlock.push(newEncryptedBlock);
   }
 
-  function editDeployedBlock(uint index, string description, string encrypted) {
+  function editDeployedBlock(uint index, string description, string encrypted) restricted {
       encryptedBlock[index].description = description;
       encryptedBlock[index].encrypted = encrypted;
   }

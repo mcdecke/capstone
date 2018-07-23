@@ -47,25 +47,20 @@ class NewPassBlock extends Component {
   encrypt = async (arr) => {
     event.preventDefault()
     // get seed from form
-    const superSecretKey = this.state.seed
-    // document.getElementById('privateKey').value
-    console.log(superSecretKey);
-    console.log(this.state.seed);
     //create data from elements
     const data = JSON.stringify(arr)
     //create strigified encrypted passwords
-    let ciphertext = CryptoJS.AES.encrypt(data, superSecretKey).toString();
+    let ciphertext = CryptoJS.AES.encrypt(data, this.state.seed).toString();
 
-    console.log(ciphertext);
     // this.setState({encryptedPasswords: ciphertext})
-
     this.setState({loading: true, errorMessage: ''})
 
     try {
       const accounts = await web3.eth.getAccounts()
-      console.log(accounts[0]);
-      await factory.methods.createPasswordBlock("Add General Description", ciphertext).send({from: accounts[0]})
-      Router.pushRoute(`/passwordBlocks/${accounts[0]}`)
+
+      const addr = await factory.methods.createPasswordBlock(document.getElementById('Label').value, ciphertext).send({from: accounts[0]})
+      console.log(addr);
+      Router.pushRoute(`/passwordBlocks/`)
     } catch (err) {
       this.setState({errorMessage: err.message})
     }
@@ -75,22 +70,15 @@ class NewPassBlock extends Component {
 
   onSubmit = async (event) => {
     event.preventDefault()
-
     let descriptions = []
     let passwords = []
     let toBeEncrypted = []
 
-    console.log(this.state.seed);
-
-    for (var i = 0; i < this.state.passwordCount; i++) {
-      console.log(this.state.passwordCount);
-      console.log(document.getElementById(`Desc${i}`).value);
-      descriptions[i] = await document.getElementById(`Desc${i}`).value
-      passwords[i] = await document.getElementById(`Pass${i}`).value
+    for (var i = 0; i < this.state.passwordCount - 1; i++) {
+      descriptions[i] = document.getElementById(`Desc${i}`).value
+      passwords[i] = document.getElementById(`Pass${i}`).value
       toBeEncrypted[i] = [`${descriptions[i]}: ${passwords[i]}`]
     }
-    console.log(toBeEncrypted);
-
     this.encrypt(toBeEncrypted)
 
   }
@@ -104,6 +92,11 @@ class NewPassBlock extends Component {
         >
 
       <div>
+        <Form.Field>
+          <label>Password Block Name</label>
+          <Input id='Label' label="Block Name" labelPosition="right"/>
+        </Form.Field>
+
         <Form.Field>
           <label>Add a Description</label>
           <Input id='Desc0' label="Description" labelPosition="right"/>
@@ -131,7 +124,6 @@ class NewPassBlock extends Component {
             value={this.state.seed}
             onChange={event => {
               this.setState({seed: event.target.value})
-              console.log(this.state.seed);
             }
           }
           />

@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {Card, Button} from 'semantic-ui-react'
+import {Card, Button, Image} from 'semantic-ui-react'
 import { Link } from '../routes'
 import blockies from 'ethereum-blockies'
 // import logo from './logo.svg';
 // import './App.css';
-// import web3 from '../src/web3'
+import web3 from '../src/ethereum/web3'
 // import Passwords from './components/Passwords'
 // import Encrypt from './components/Encrypt'
 // import Decrypt from './components/Decrypt'
@@ -16,13 +16,14 @@ import blockies from 'ethereum-blockies'
 // const canvas = document.getElementById('canvas')
 const CryptoJS = require("crypto-js")
 
+import PasswordBlock from '../src/ethereum/passwordBlock'
 import factory from '../src/ethereum/factory.js'
 import Layout from '../src/components/Layout'
 
 class App extends Component {
 
   // state = {
-  //   address: '', '0x...'
+  //   address: '',
   //   message: 'Click a button to get started',
   //   encryptedPasswords: 'encrypted',
   //   decryptedPasswords: [],
@@ -30,13 +31,46 @@ class App extends Component {
   //   passwordList: []
   // }
 
+
+  state = {
+    address: ''
+  }
+
+  populate = async () => {
+    const address = await web3.eth.getAccounts()
+    console.log(address[0]);
+    this.setState({address: address[0]})
+    //   console.log(address[0]);
+    //   return address[0]
+  }
+
+  // componentDidMount(){
+  //   this.populate()
+  //   // console.log(this.populate());
+  //   this.setState({address: this.populate})
+  // }
+
   //next.js thing --static helps w/ rendering?
   //getInitialProps instead of state?
   static async getInitialProps() {
+
     const passwordBlocks = await factory.methods.getDeployedPasswordBlocks().call()
 
-    //returns object as props
-    return {passwordBlocks}
+    const addresses = await web3.eth.getAccounts()
+
+    console.log("Manager: "+ passwordBlocks.manager);
+
+    console.log("Current MM address: "+ addresses[0]);
+    const address = addresses[0]
+    // this.setState({address: address[0]})
+    // const passBlocks = await Promise.all(
+    //   Array(parseInt(passwordBlocks.length)).fill().map((element) => {
+    //     console.log(passwordBlocks.methods);
+    //     return passwordBlocks.methods
+    //   })
+    // )
+    // //returns object as props
+    return {passwordBlocks, address}
   }
 
 
@@ -113,35 +147,80 @@ class App extends Component {
   //   console.log(passwordBlocks[0])
   // }
 
+  filterBlocks(address) {
+
+    const passwordBlockManager = PasswordBlock(address).methods.manager().call()
+
+    console.log(`Address ${address} owned by ${passwordBlockManager}`);
+
+    const adr = web3.eth.getAccounts()
+    console.log(adr[0]);
+
+    if(passwordBlockManager === adr[0]){
+      console.log('HULLO!!!');
+      return true
+    } else {
+      console.log('No soup for you!');
+      return false
+    }
+  }
+
+
+
+
   renderPasswordBlocks() {
 
     const items = this.props.passwordBlocks.map(address => {
+
+      let style = {
+        margin: '10px',
+        backgroundColor: 'green'
+      }
+      // console.log(address);
+      if((this.filterBlocks(address)) === false){
+        style = {
+          margin: '10px',
+          backgroundColor: 'tomato'
+        }
+      }
+
+console.log(this.filterBlocks(address));
+console.log(style);
+
       return {
         header: (
-          <div>
-            ${address}
-            <br></br>
-            <br></br>
-            <img
-              src={`https://eth.vanity.show/${address}`}
-              alt={`Identicon of ether address ${address}`}
-            />
-            <br></br>
-            <br></br>
-          </div>
+          <Card>
+            <Card.Content
+              style={style}
+              >${address}</Card.Content>
+            <Card.Content>
+              <div>
+                <Image
+                  src={`https://eth.vanity.show/${address}`}
+                  alt={`Identicon of ether address ${address}`}
+                />
+              </div>
+            </Card.Content>
+          </Card>
         ),
         description: (
-          <Link route={`/passwordBlocks/${address}`}>
+        <div >
+          <Link
+             route={`/passwordBlocks/${address}`}>
             <a>View Password Block</a>
           </Link>
+        </div>
         ),
         //fluid makes the card flow all the way to the right.
         fluid: true,
         style: {overflowWrap: 'break-word'}
       }
     })
-    return <Card.Group items={items}/>
+
+    return <Card.Group items={items} />
   }
+
+
 
   render() {
     return (

@@ -16,13 +16,18 @@ class RenderRow extends Component {
     const {id, address, block} = this.props
 
     let styles = {
-      // margin: '20px',
+      margin: '20px',
       float: 'right',
-      // border: '30px'
+      border: '30px',
+      width: '200px'
+  }
+
+  let cellStyle = {
+    wordBreak:'break-all'
   }
 
     return(
-      <Row>
+      <Row style={cellStyle} >
         <Cell>{id}</Cell>
         <Cell>{block.description}</Cell>
         <Cell>{block.encrypted}</Cell>
@@ -35,7 +40,9 @@ class RenderRow extends Component {
               </a>
             </Link>
         </Cell>
-        {this.state.decryptedPasswords}
+        <div style={cellStyle}>
+          {this.state.decryptedPasswords}
+        </div>
       </Row>
     )
   }

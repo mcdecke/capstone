@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Button, Input, Form, Message} from 'semantic-ui-react'
-import {Link} from '../../../routes'
+import {Link, Router} from '../../../routes'
 import Layout from '../../../src/components/Layout'
 import PasswordBlock from '../../../src/ethereum/passwordBlock'
 import factory from '../../../src/ethereum/factory'
@@ -37,7 +37,7 @@ static async getInitialProps(props){
   const id = props.query.id
   // console.log(id);
   // console.log(thisBlock);
-  // console.log(passwordBlock.methods);
+  console.log(passwordBlock.methods);
   return { address, thisBlock, id, passwordBlock}
 }
 
@@ -66,15 +66,30 @@ submitter = (e, x) => {
   this.setState({disabled: !this.state.disabled})
 }
 
-onSave = (e) => {
-  e.preventDefault()
+encrypt = async (event) => {
+  event.preventDefault()
 
-  ///////
-  // Get elements.value by class, string 'em together'
+  let data = document.getElementById('editPass').value
 
-  // encrypt new stringaling
+  console.log(data);
+  //create strigified encrypted passwords
+  let ciphertext = CryptoJS.AES.encrypt(data, this.state.seed).toString();
 
-  //save to correct location
+  console.log(ciphertext);
+
+  this.setState({loading: true, errorMessage: ''})
+
+console.log(this.props.address);
+
+  try {
+    const accounts = await web3.eth.getAccounts()
+    await PasswordBlock(this.props.address).methods.editDeployedBlock(this.props.id, this.state.description, ciphertext).send({from: accounts[0]})
+    Router.pushRoute(`/passwordBlocks/${this.props.address}`)
+  } catch (err) {
+    this.setState({errorMessage: err.message})
+  }
+  this.setState({loading: false})
+
 }
 
 onSubmit = async (event) => {
@@ -90,7 +105,6 @@ console.log('about to try');
     const accounts = await web3.eth.getAccounts()
     console.log(accounts[0]);
     await this.props.passwordBlock.methods.editDeployedBlock(this.props.id, this.state.description, this.props.thisBlock.encrypted).send({from: accounts[0]})
-    // Router.pushRoute(`/passwordBlocks/${address}/${this.props.id}`)
     Router.pushRoute(`/`)
   } catch (err) {
     this.setState({errorMessage: err.message})
@@ -136,6 +150,14 @@ console.log('about to try');
           disabled ={this.state.disabled}
           edit={this.state.edit}
         />
+
+        <br></br>
+        <br></br>
+        <br></br>
+
+        <Button
+          onClick={this.encrypt}
+          loading={this.state.loading} primary="primary">Recrypt Block!</Button>
 
       </Layout>
     )

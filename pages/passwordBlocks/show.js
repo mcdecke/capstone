@@ -56,10 +56,15 @@ class ShowPassBlock extends Component {
               <HeaderCell>Edit</HeaderCell>
             </Row>
           </Header>
-          <Body>
-            {this.renderRow()}
-          </Body>
+          <Body>{this.renderRow()}</Body>
         </Table>
+
+        <Link route={`/passwordBlocks/${this.props.address}/new`}>
+          <a>
+            <Button floated="right" content="Add New Password Block" icon="add circle" primary/>
+          </a>
+        </Link>
+
       </Layout>
     )
   }
