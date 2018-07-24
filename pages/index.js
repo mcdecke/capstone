@@ -31,7 +31,8 @@ class App extends Component {
   // }
 
   state = {
-    address: ''
+    address: '',
+    cards: []
   }
 
   populate = async () => {
@@ -149,88 +150,159 @@ class App extends Component {
 
     const passwordBlockManager = await PasswordBlock(address).methods.manager().call()
 
-    // console.log(`Address ${address} owned by ${passwordBlockManager}`);
 
     const adr = await web3.eth.getAccounts()
     // console.log(adr[0]);
 
     if(passwordBlockManager === adr[0]){
-      // console.log('HULLO!!!');
       return true
     } else {
-      // console.log('No soup for you!');
       return false
     }
   }
 
 
+  renderPasswordBlocks = async () => {
 
+    const passwordBlocks = await factory.methods.getDeployedPasswordBlocks().call()
 
-  renderPasswordBlocks = () => {
+    const adr = await web3.eth.getAccounts()
 
-    const items = this.props.passwordBlocks.map(address => {
+    let style = {
+      margin: '10px',
+      backgroundColor: 'green',
+      // borderRadius:15,
+      textAlign: 'center'
+    }
 
-      let style = {
-        margin: '10px',
-        backgroundColor: 'green',
-        // borderRadius:15,
-        textAlign: 'center'
+    let style2 = {
+      margin: '10px',
+      textAlign: 'center',
+      // borderRadius: '15',
+    }
+
+    const items = Promise.all(passwordBlocks.map(async (address) => {
+
+      const passwordBlockManager = await PasswordBlock(address).methods.manager().call()
+
+        return {
+          manager: passwordBlockManager,
+          header: (
+            <Card>
+              <Card.Content
+                fluid="true"
+                style={style} >${address}</Card.Content>
+              <Card.Content
+                style={style2}>
+                <div>
+                  <Image
+                    src={`https://eth.vanity.show/${address}`}
+                    alt={`Identicon of ether address ${address}`}
+                  />
+                </div>
+              </Card.Content>
+            </Card>
+          ),
+          description: (
+          <div style={style2}>
+            <Link
+               route={`/passwordBlocks/${address}`}>
+              <a>View Password Block</a>
+            </Link>
+          </div>
+          ),
+          //fluid makes the card flow all the way to the right.
+          fluid: true,
+          style: {overflowWrap: 'break-word',
+          borderRadius: 20,
+          }
+        }
       }
+    )
+  )
 
-      let style2 = {
-        margin: '10px',
-        textAlign: 'center',
-        // borderRadius: '15',
-      }
+const results = await items
 
-      const x = this.filterBlocks(address)
-console.log(x);
-      // console.log(address);
-      // if((this.filterBlocks(address)) === false){
-      //   style = {
-      //     margin: '10px',
-      //     backgroundColor: 'tomato'
-      //   }
-      // }
+const newResults = []
 
-console.log(this.filterBlocks(address));
-console.log(style);
-
-      return {
-        header: (
-          <Card>
-            <Card.Content
-              fluid="true"
-              style={style} >${address}</Card.Content>
-            <Card.Content
-              style={style2}>
-              <div>
-                <Image
-                  src={`https://eth.vanity.show/${address}`}
-                  alt={`Identicon of ether address ${address}`}
-                />
-              </div>
-            </Card.Content>
-          </Card>
-        ),
-        description: (
-        <div style={style2}>
-          <Link
-             route={`/passwordBlocks/${address}`}>
-            <a>View Password Block</a>
-          </Link>
-        </div>
-        ),
-        //fluid makes the card flow all the way to the right.
-        fluid: true,
-        style: {overflowWrap: 'break-word',
-        borderRadius: 20,
-      }
-      }
-    })
-
-    return <Card.Group itemsPerRow={4} items={items} />
+for (var i = 0; i < results.length; i++) {
+  if(results[i].manager === adr[0]) {
+    newResults.push(results[i])
   }
+}
+
+console.log(newResults);
+// if(newResults)
+
+this.setState({cards: newResults})
+
+}
+
+//   renderPasswordBlocks = () => {
+//
+//     const items = this.props.passwordBlocks.map(address => {
+//
+//       let style = {
+//         margin: '10px',
+//         backgroundColor: 'green',
+//         // borderRadius:15,
+//         textAlign: 'center'
+//       }
+//
+//       let style2 = {
+//         margin: '10px',
+//         textAlign: 'center',
+//         // borderRadius: '15',
+//       }
+//
+//       const x = this.filterBlocks(address)
+// console.log(x);
+//       // console.log(address);
+//       // if((this.filterBlocks(address)) === false){
+//       //   style = {
+//       //     margin: '10px',
+//       //     backgroundColor: 'tomato'
+//       //   }
+//       // }
+//
+// console.log(this.filterBlocks(address));
+// console.log(style);
+//
+//       return {
+//         header: (
+//           <Card>
+//             <Card.Content
+//               fluid="true"
+//               style={style} >${address}</Card.Content>
+//             <Card.Content
+//               style={style2}>
+//               <div>
+//                 <Image
+//                   src={`https://eth.vanity.show/${address}`}
+//                   alt={`Identicon of ether address ${address}`}
+//                 />
+//               </div>
+//             </Card.Content>
+//           </Card>
+//         ),
+//         description: (
+//         <div style={style2}>
+//           <Link
+//              route={`/passwordBlocks/${address}`}>
+//             <a>View Password Block</a>
+//           </Link>
+//         </div>
+//         ),
+//         //fluid makes the card flow all the way to the right.
+//         fluid: true,
+//         style: {overflowWrap: 'break-word',
+//         borderRadius: 20,
+//       }
+//       }
+//     })
+//
+//     return <Card.Group itemsPerRow={4} items={items} />
+//   }
 
 
 
@@ -238,6 +310,7 @@ console.log(style);
     return (
       <Layout>
         <div>
+          <Button onClick={this.renderPasswordBlocks} floated="right" content="Show Blocks" icon="add circle" primary/>
           <h3>Password Blocks
           <Link route="/passwordBlocks/new">
             <a>
@@ -249,7 +322,8 @@ console.log(style);
       <br></br>
       <br></br>
       <div>
-        {this.renderPasswordBlocks()}
+        <Card.Group itemsPerRow={3}
+          items={this.state.cards} />
       </div>
       </Layout>
     )

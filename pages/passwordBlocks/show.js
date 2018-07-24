@@ -5,6 +5,7 @@ import PasswordBlock from '../../src/ethereum/passwordBlock'
 import EditForm from '../../src/components/EditForm'
 import { Link } from '../../routes'
 import RenderRow from '../../src/components/RenderRow'
+const toastr = require('toastr')
 
 class ShowPassBlock extends Component {
 
@@ -30,6 +31,9 @@ class ShowPassBlock extends Component {
 
 
   renderRow() {
+
+  toastr.clear()
+
     return this.props.blocks.map((block, index) => {
       console.log(block);
       return <RenderRow

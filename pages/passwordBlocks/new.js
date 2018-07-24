@@ -88,9 +88,9 @@ class NewPassBlock extends Component {
     try {
       const accounts = await web3.eth.getAccounts()
 
-      // const addr = await factory.methods.createPasswordBlock(document.getElementById('Label').value, ciphertext).send({from: accounts[0]})
-      // console.log(addr);
-      // Router.pushRoute(`/`)
+      const addr = await factory.methods.createPasswordBlock(document.getElementById('Label').value, ciphertext).send({from: accounts[0]})
+      console.log(addr);
+      Router.pushRoute(`/`)
     } catch (err) {
       toastr.clear()
       this.setState({errorMessage: err.message})
@@ -98,30 +98,9 @@ class NewPassBlock extends Component {
     this.setState({loading: false})
   }
 
-  onSubmit = async (event) =>
+  onSubmit = async (event) => {
 
     event.preventDefault()
-
-    toastr.options = {
-      "closeButton": false,
-      "debug": false,
-      "newestOnTop": false,
-      "progressBar": true,
-      "positionClass": "toast-bottom-center",
-      "preventDuplicates": true,
-      "onclick": null,
-      "showDuration": "700",
-      "hideDuration": "30000",
-      "timeOut": "33000",
-      "extendedTimeOut": "1000",
-      "showEasing": "swing",
-      "hideEasing": "linear",
-      "showMethod": "show",
-      "hideMethod": "fadeOut"
-    }
-
-    console.log('hi');
-    toastr.info("Your transaction will be mined.", "Please Click Submit")
 
     let descriptions = []
     let passwords = []
@@ -131,6 +110,10 @@ class NewPassBlock extends Component {
       descriptions[i] = document.getElementById(`Desc${i}`).value
       passwords[i] = document.getElementById(`Pass${i}`).value
       toBeEncrypted[i] = [`${descriptions[i]}: ${passwords[i]}`]
+    }
+
+    if(this.state.passwordCount === 1){
+      toBeEncrypted[0] = [document.getElementById(`Desc0`).value+`:`+ document.getElementById(`Pass0`).value]
     }
     this.encrypt(toBeEncrypted)
   }

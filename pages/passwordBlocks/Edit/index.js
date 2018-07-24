@@ -120,7 +120,7 @@ onSubmit = async (event) => {
     const accounts = await web3.eth.getAccounts()
     console.log(accounts[0]);
     await this.props.passwordBlock.methods.editDeployedBlock(this.props.id, this.state.description, this.props.thisBlock.encrypted).send({from: accounts[0]})
-    Router.pushRoute(`/`)
+    Router.pushRoute(`/passwordBlocks/${this.props.address}`)
   } catch (err) {
     toastr.clear()
     this.setState({errorMessage: err.message})
