@@ -7,6 +7,7 @@ import factory from '../../../src/ethereum/factory'
 import web3 from '../../../src/ethereum/web3'
 import Password from '../../../src/components/Password'
 const CryptoJS = require("crypto-js")
+const toastr = require('toastr')
 
 class EditBlock extends Component {
 
@@ -71,21 +72,38 @@ encrypt = async (event) => {
 
   let data = document.getElementById('editPass').value
 
-  console.log(data);
   //create strigified encrypted passwords
   let ciphertext = CryptoJS.AES.encrypt(data, this.state.seed).toString();
 
-  console.log(ciphertext);
 
+    toastr.options = {
+      "closeButton": false,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": true,
+      "positionClass": "toast-bottom-center",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "700",
+      "hideDuration": "30000",
+      "timeOut": "45000",
+      // "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "show",
+      "hideMethod": "fadeOut"
+    }
+
+    toastr.info("Your transaction will be mined.", "Please Click Submit")
   this.setState({loading: true, errorMessage: ''})
 
-console.log(this.props.address);
 
   try {
     const accounts = await web3.eth.getAccounts()
     await PasswordBlock(this.props.address).methods.editDeployedBlock(this.props.id, this.state.description, ciphertext).send({from: accounts[0]})
     Router.pushRoute(`/passwordBlocks/${this.props.address}`)
   } catch (err) {
+    toastr.clear()
     this.setState({errorMessage: err.message})
   }
   this.setState({loading: false})
@@ -93,13 +111,10 @@ console.log(this.props.address);
 }
 
 onSubmit = async (event) => {
-  // console.log(this.props.thisBlock[]);
-  console.log(this.props.passwordBlock.methods.editDeployedBlock);
-  event.preventDefault()
-  console.log('ere');
-  this.setState({loading: true, errorMessage: ''})
 
-console.log('about to try');
+  event.preventDefault()
+
+  this.setState({loading: true, errorMessage: ''})
 
   try {
     const accounts = await web3.eth.getAccounts()
@@ -107,6 +122,7 @@ console.log('about to try');
     await this.props.passwordBlock.methods.editDeployedBlock(this.props.id, this.state.description, this.props.thisBlock.encrypted).send({from: accounts[0]})
     Router.pushRoute(`/`)
   } catch (err) {
+    toastr.clear()
     this.setState({errorMessage: err.message})
   }
   this.setState({loading: false})
@@ -144,15 +160,13 @@ console.log('about to try');
         </Form>
 
         <Password
-          description='description goes here'
+          // description='description goes here'
           password={this.state.decryptedPasswords}
           submitter={this.submitter}
           disabled ={this.state.disabled}
           edit={this.state.edit}
         />
 
-        <br></br>
-        <br></br>
         <br></br>
 
         <Button

@@ -3,7 +3,6 @@ import {Card, Button, Image} from 'semantic-ui-react'
 import { Link } from '../routes'
 import blockies from 'ethereum-blockies'
 // import logo from './logo.svg';
-// import './App.css';
 import web3 from '../src/ethereum/web3'
 // import Passwords from './components/Passwords'
 // import Encrypt from './components/Encrypt'
@@ -30,7 +29,6 @@ class App extends Component {
   //   qrCode: '',
   //   passwordList: []
   // }
-
 
   state = {
     address: ''

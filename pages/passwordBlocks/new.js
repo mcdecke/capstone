@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Form, Button, Input, Message} from 'semantic-ui-react'
+import {Form, Button, Input, Message, Card} from 'semantic-ui-react'
 import Layout from '../../src/components/Layout'
 import factory from '../../src/ethereum/factory'
 import web3 from '../../src/ethereum/web3'
@@ -30,16 +30,23 @@ class NewPassBlock extends Component {
       console.log(this.state.passwordCount);
       this.state.passwordList[i + 1] = (
       <div>
-      <Form.Field>
-        <label>Add a Description</label>
-        <Input id={`Desc${i+1}`} label="Description" labelPosition="right"/>
-      </Form.Field>
-
-      <Form.Field>
-        <label>Add Password</label>
-        <Input id={`Pass${i+1}`} label="Password" labelPosition="right"/>
-      </Form.Field>
+      <Card fluid="true">
+        <Card.Content>
+          <Form.Field>
+            <label>Add a Description</label>
+            <Input id={`Desc${i+1}`} label="Description" labelPosition="right"/>
+          </Form.Field>
+        </Card.Content>
+        <Card.Content>
+          <Form.Field>
+            <label>Add Password</label>
+            <Input id={`Pass${i+1}`} label="Password" labelPosition="right"/>
+          </Form.Field>
+        </Card.Content>
+      </Card>
+    <br></br>
     </div>
+
     )
     }
   }
@@ -47,11 +54,33 @@ class NewPassBlock extends Component {
 
   encrypt = async (arr) => {
     event.preventDefault()
+    console.log(arr);
     // get seed from form
     //create data from elements
     const data = JSON.stringify(arr)
+    console.log(data);
     //create strigified encrypted passwords
     let ciphertext = CryptoJS.AES.encrypt(data, this.state.seed).toString();
+
+    toastr.options = {
+      "closeButton": false,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": true,
+      "positionClass": "toast-bottom-center",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "700",
+      "hideDuration": "30000",
+      "timeOut": "45000",
+      // "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "show",
+      "hideMethod": "fadeOut"
+    }
+
+    toastr.info("Your transaction is being mined.", "Please Wait")
 
     // this.setState({encryptedPasswords: ciphertext})
     this.setState({loading: true, errorMessage: ''})
@@ -59,30 +88,51 @@ class NewPassBlock extends Component {
     try {
       const accounts = await web3.eth.getAccounts()
 
-      const addr = await factory.methods.createPasswordBlock(document.getElementById('Label').value, ciphertext).send({from: accounts[0]})
-      console.log(addr);
-      Router.pushRoute(`/passwordBlocks/`)
+      // const addr = await factory.methods.createPasswordBlock(document.getElementById('Label').value, ciphertext).send({from: accounts[0]})
+      // console.log(addr);
+      // Router.pushRoute(`/`)
     } catch (err) {
+      toastr.clear()
       this.setState({errorMessage: err.message})
     }
     this.setState({loading: false})
-
   }
 
-  onSubmit = async (event) => {
+  onSubmit = async (event) =>
+
     event.preventDefault()
+
+    toastr.options = {
+      "closeButton": false,
+      "debug": false,
+      "newestOnTop": false,
+      "progressBar": true,
+      "positionClass": "toast-bottom-center",
+      "preventDuplicates": true,
+      "onclick": null,
+      "showDuration": "700",
+      "hideDuration": "30000",
+      "timeOut": "33000",
+      "extendedTimeOut": "1000",
+      "showEasing": "swing",
+      "hideEasing": "linear",
+      "showMethod": "show",
+      "hideMethod": "fadeOut"
+    }
+
     console.log('hi');
-    toastr.info('Are you the 6 fingered man?')
-    // let descriptions = []
-    // let passwords = []
-    // let toBeEncrypted = []
-    //
-    // for (var i = 0; i < this.state.passwordCount - 1; i++) {
-    //   descriptions[i] = document.getElementById(`Desc${i}`).value
-    //   passwords[i] = document.getElementById(`Pass${i}`).value
-    //   toBeEncrypted[i] = [`${descriptions[i]}: ${passwords[i]}`]
-    // }
-    // this.encrypt(toBeEncrypted)
+    toastr.info("Your transaction will be mined.", "Please Click Submit")
+
+    let descriptions = []
+    let passwords = []
+    let toBeEncrypted = []
+
+    for (var i = 0; i < this.state.passwordCount - 1; i++) {
+      descriptions[i] = document.getElementById(`Desc${i}`).value
+      passwords[i] = document.getElementById(`Pass${i}`).value
+      toBeEncrypted[i] = [`${descriptions[i]}: ${passwords[i]}`]
+    }
+    this.encrypt(toBeEncrypted)
   }
 
   render() {
@@ -99,22 +149,27 @@ class NewPassBlock extends Component {
           <Input id='Label' label="Block Name" labelPosition="right"/>
         </Form.Field>
 
-        <Form.Field>
-          <label>Add a Description</label>
-          <Input id='Desc0' label="Description" labelPosition="right"/>
-        </Form.Field>
-
-        <Form.Field>
-          <label>Add Password</label>
-          <Input id='Pass0' label="Password" labelPosition="right"/>
-        </Form.Field>
+        <Card fluid="true">
+          <Card.Content>
+            <Form.Field >
+              <label>Add a Description</label>
+              <Input id='Desc0' label="Description" labelPosition="right"/>
+            </Form.Field>
+          </Card.Content>
+          <Card.Content>
+            <Form.Field>
+              <label>Add Password</label>
+              <Input id='Pass0' label="Password" labelPosition="right"/>
+            </Form.Field>
+          </Card.Content>
+        </Card>
+      <br></br>
       </div>
 
         <div >
           {this.state.passwordList}
         </div>
 
-        <br></br>
         <Button primary="primary" onClick={((e) => this.onAddPassword(e))}>Add Another Password!</Button>
 
         <Message error="error" header="Oops!" content={this.state.errorMessage}/>
