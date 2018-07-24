@@ -147,20 +147,20 @@ class App extends Component {
   //   console.log(passwordBlocks[0])
   // }
 
-  filterBlocks(address) {
+  filterBlocks = async (address) => {
 
-    const passwordBlockManager = PasswordBlock(address).methods.manager().call()
+    const passwordBlockManager = await PasswordBlock(address).methods.manager().call()
 
-    console.log(`Address ${address} owned by ${passwordBlockManager}`);
+    // console.log(`Address ${address} owned by ${passwordBlockManager}`);
 
-    const adr = web3.eth.getAccounts()
-    console.log(adr[0]);
+    const adr = await web3.eth.getAccounts()
+    // console.log(adr[0]);
 
     if(passwordBlockManager === adr[0]){
-      console.log('HULLO!!!');
+      // console.log('HULLO!!!');
       return true
     } else {
-      console.log('No soup for you!');
+      // console.log('No soup for you!');
       return false
     }
   }
@@ -168,21 +168,32 @@ class App extends Component {
 
 
 
-  renderPasswordBlocks() {
+  renderPasswordBlocks = () => {
 
     const items = this.props.passwordBlocks.map(address => {
 
       let style = {
         margin: '10px',
-        backgroundColor: 'green'
+        backgroundColor: 'green',
+        // borderRadius:15,
+        textAlign: 'center'
       }
+
+      let style2 = {
+        margin: '10px',
+        textAlign: 'center',
+        // borderRadius: '15',
+      }
+
+      const x = this.filterBlocks(address)
+console.log(x);
       // console.log(address);
-      if((this.filterBlocks(address)) === false){
-        style = {
-          margin: '10px',
-          backgroundColor: 'tomato'
-        }
-      }
+      // if((this.filterBlocks(address)) === false){
+      //   style = {
+      //     margin: '10px',
+      //     backgroundColor: 'tomato'
+      //   }
+      // }
 
 console.log(this.filterBlocks(address));
 console.log(style);
@@ -191,9 +202,10 @@ console.log(style);
         header: (
           <Card>
             <Card.Content
-              style={style}
-              >${address}</Card.Content>
-            <Card.Content>
+              fluid="true"
+              style={style} >${address}</Card.Content>
+            <Card.Content
+              style={style2}>
               <div>
                 <Image
                   src={`https://eth.vanity.show/${address}`}
@@ -204,7 +216,7 @@ console.log(style);
           </Card>
         ),
         description: (
-        <div >
+        <div style={style2}>
           <Link
              route={`/passwordBlocks/${address}`}>
             <a>View Password Block</a>
@@ -213,11 +225,13 @@ console.log(style);
         ),
         //fluid makes the card flow all the way to the right.
         fluid: true,
-        style: {overflowWrap: 'break-word'}
+        style: {overflowWrap: 'break-word',
+        borderRadius: 20,
+      }
       }
     })
 
-    return <Card.Group items={items} />
+    return <Card.Group itemsPerRow={4} items={items} />
   }
 
 
@@ -226,14 +240,19 @@ console.log(style);
     return (
       <Layout>
         <div>
-          <h3>Password Blocks</h3>
+          <h3>Password Blocks
           <Link route="/passwordBlocks/new">
             <a>
               <Button floated="right" content="Create Password Block" icon="add circle" primary/>
             </a>
           </Link>
+        </h3>
+      </div>
+      <br></br>
+      <br></br>
+      <div>
         {this.renderPasswordBlocks()}
-        </div>
+      </div>
       </Layout>
     )
   }

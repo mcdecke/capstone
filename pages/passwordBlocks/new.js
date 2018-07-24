@@ -5,6 +5,7 @@ import factory from '../../src/ethereum/factory'
 import web3 from '../../src/ethereum/web3'
 import {Link, Router} from '../../routes'
 const CryptoJS = require("crypto-js")
+const toastr = require('toastr')
 
 class NewPassBlock extends Component {
 
@@ -70,17 +71,18 @@ class NewPassBlock extends Component {
 
   onSubmit = async (event) => {
     event.preventDefault()
-    let descriptions = []
-    let passwords = []
-    let toBeEncrypted = []
-
-    for (var i = 0; i < this.state.passwordCount - 1; i++) {
-      descriptions[i] = document.getElementById(`Desc${i}`).value
-      passwords[i] = document.getElementById(`Pass${i}`).value
-      toBeEncrypted[i] = [`${descriptions[i]}: ${passwords[i]}`]
-    }
-    this.encrypt(toBeEncrypted)
-
+    console.log('hi');
+    toastr.info('Are you the 6 fingered man?')
+    // let descriptions = []
+    // let passwords = []
+    // let toBeEncrypted = []
+    //
+    // for (var i = 0; i < this.state.passwordCount - 1; i++) {
+    //   descriptions[i] = document.getElementById(`Desc${i}`).value
+    //   passwords[i] = document.getElementById(`Pass${i}`).value
+    //   toBeEncrypted[i] = [`${descriptions[i]}: ${passwords[i]}`]
+    // }
+    // this.encrypt(toBeEncrypted)
   }
 
   render() {
