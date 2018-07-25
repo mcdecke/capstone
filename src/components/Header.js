@@ -26,17 +26,17 @@ render(){
     return (
       <Menu style={{marginTop: '10px'}}>
         <Link route="/">
-          <a className="item">PassBlocks</a>
+          <a className="item">Home</a>
         </Link>
           {/* Your Address: {this.state.address} */}
         <Menu.Menu position="right">
-          <Link route="/">
+          <Link route="/passwordBlocks/new">
             <a className="item">Add Block</a>
           </Link>
-
+{/* 
           <Link route="/passwordBlocks/new">
             <a className="item">+</a>
-          </Link>
+          </Link> */}
         </Menu.Menu>
       </Menu>
     )
