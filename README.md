@@ -1,9 +1,12 @@
 Setup
-1) Fork and clone the repo
+1) Fork and clone repo
 2) Install the dependencies and run
+
    $ npm install
+   
    $ npm start
-3) Open http:localhost:3000
+   
+3) Open http://localhost:3000
 4) Unlock metamask account and switch to rinkby test-net.
 
 5) Click Create a Password Block
