@@ -1,4 +1,5 @@
 const routes = require('next-routes')()
 
-// routes.add()
+routes.add('/tokens/:tokenId', '/token')
+
 module.exports = routes

@@ -5,6 +5,7 @@ import { Button, Table, Header, Card } from 'semantic-ui-react'
 import Layout from '../components/Layout'
 
 
+
 class CampaignIndex extends Component {
 
 //next.js specific

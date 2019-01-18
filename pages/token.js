@@ -3,40 +3,49 @@ import factory from '../ethereum/factory'
 import web3 from '../ethereum/web3'
 import { Button, Table, Header, Card } from 'semantic-ui-react'
 import Layout from '../components/Layout'
+import { withRouter } from 'next/router'
 
 class Tokens extends Component {
 
   async componentDidMount() {
     // this.viewTokens()
 
+    let num = this.props.url.asPath.split('/')[2]
+
+    console.log(num);
+
     const accounts = await web3.eth.getAccounts();
-    let tokens = []
+    let token = []
 
-    for (var i = 0; i < 6; i++) {
-      let owner = await factory.methods.ownerOf(i).call()
-      let data = await factory.methods.tokenURI(i).call()
+      let owner = await factory.methods.ownerOf(num).call()
+      let data = await factory.methods.tokenURI(num).call()
       if (owner == accounts[0]) {
-        tokens.push(data)
+        token.push(data)
       }
-    }
 
-    this.setState({tokens: tokens})
+    console.log(owner);
+    console.log(accounts[0]);
+
+    this.setState({token: token})
 
   }
 
   renderRow() {
     if(this.state) {
-      let x = this.state.tokens
+      let x = this.state.token
       console.log(x);
-      let ownedTokens = x.map((data) => {
-
+      // let parsedData = x.split(':')
+      // console.log(parsedData);
+      let ownedToken = x.map((data) => {
+        let parsedData = data.split(':')
+        console.log(parsedData);
           return {
-            header: data,
-            description: <a>data</a>,
+            header: parsedData[0],
+            description:  parsedData[1] || 'No data encrypted yet!',
             fluid: true
           }
         })
-        return <Card.Group items={ownedTokens}/>
+        return <Card.Group items={ownedToken}/>
     }
   }
 

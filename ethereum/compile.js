@@ -22,3 +22,6 @@ for (let contract in output) {
 
 // Attempting to deploy from account 0xE74dA3F4664EfE8A4F2A7dD78a1d9E521904E5bE
 // Contract deployed to 0xfE4cc28992246feb73011BC07bfC5b80285E7c1a
+
+// 0xDa6F20b595735690a5411413242fC3A0B3959540
+// 0xde11Afe14f2Da2cb1e3909b20dfef8599A126d38

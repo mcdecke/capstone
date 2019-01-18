@@ -4,7 +4,7 @@ import PasswordToken from './build/PasswordToken'
 
 const instance = new web3.eth.Contract(
   JSON.parse(PasswordToken.interface),
-  '0xDa6F20b595735690a5411413242fC3A0B3959540'
+  '0xde11Afe14f2Da2cb1e3909b20dfef8599A126d38'
 )
 
 export default instance

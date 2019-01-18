@@ -51,7 +51,7 @@ class Tokens extends Component {
 
     try {
       console.log(this.state.account, tokenId, tokenURI);
-      await factory.methods.mintUniqueTokenTo(this.state.account, tokenId, tokenURI)
+      await factory.methods.mintUniqueTokenTo(this.state.account, tokenURI)
       .send({
         from: this.state.account
       })

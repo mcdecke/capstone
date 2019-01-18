@@ -653,23 +653,31 @@ contract PasswordToken is ERC721Metadata {
     constructor (string memory _name, string memory _symbol) public
         ERC721Metadata(_name, _symbol) {}
 
+
+
     /**
     * Custom accessor to create a unique token
     */
 
     function mintUniqueTokenTo(
         address _to,
-        uint256 _tokenId,
         string memory _tokenURI
     ) public
     {
-        super._mint(_to, _tokenId);
-        super._setTokenURI(_tokenId, _tokenURI);
+        super._mint(_to,tokenCount);
+        super._setTokenURI(tokenCount, _tokenURI);
+        tokenCount++;
     }
 
     function editToken(uint256 _tokenId, string memory _tokenURI) public {
         require(ownerOf(_tokenId) == msg.sender);
         _setTokenURI(_tokenId, _tokenURI);
     }
+    
 
+    function getTokenCount() public view returns (uint256) {
+      return tokenCount;
+    }
+
+    uint256 tokenCount = 0;
 }
