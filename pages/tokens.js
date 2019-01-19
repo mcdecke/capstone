@@ -9,8 +9,6 @@ import { Link, Router } from '../routes'
 class Tokens extends Component {
 
   async componentDidMount() {
-    // this.viewTokens()
-
     const accounts = await web3.eth.getAccounts();
     let tokenCount = await factory.methods.getTokenCount().call()
     let tokens = []
@@ -19,13 +17,10 @@ class Tokens extends Component {
       let owner = await factory.methods.ownerOf(i).call()
       let data = await factory.methods.tokenURI(i).call()
 
-      console.log(owner);
       if (owner == accounts[0]) {
         tokens.push(data+`:${i}`)
       }
     }
-
-    console.log(tokens);
     this.setState({tokens: tokens})
 
   }
@@ -33,10 +28,8 @@ class Tokens extends Component {
   renderRow() {
     if(this.state) {
       let x = this.state.tokens
-      console.log(x);
       let ownedTokens = x.map((data, index) => {
         let name = data.split(':')
-        console.log(name)
           return {
             header: name[0],
             description: (

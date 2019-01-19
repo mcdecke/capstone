@@ -4,15 +4,17 @@ import web3 from '../ethereum/web3'
 import { Button, Table, Header, Card } from 'semantic-ui-react'
 import Layout from '../components/Layout'
 import { withRouter } from 'next/router'
+import EditInput from '../components/EditInput'
+import Decrypt from '../components/Decrypt'
+
 
 class Tokens extends Component {
 
   async componentDidMount() {
-    // this.viewTokens()
 
     let num = this.props.url.asPath.split('/')[2]
 
-    console.log(num);
+    // console.log(num);
 
     const accounts = await web3.eth.getAccounts();
     let token = []
@@ -23,22 +25,15 @@ class Tokens extends Component {
         token.push(data)
       }
 
-    console.log(owner);
-    console.log(accounts[0]);
-
-    this.setState({token: token})
+    this.setState({token: token, data: '', showInput: false, showDecrypt: false, num: num, decrypted: 'asdf'})
 
   }
 
   renderRow() {
     if(this.state) {
       let x = this.state.token
-      console.log(x);
-      // let parsedData = x.split(':')
-      // console.log(parsedData);
       let ownedToken = x.map((data) => {
         let parsedData = data.split(':')
-        console.log(parsedData);
           return {
             header: parsedData[0],
             description:  parsedData[1] || 'No data encrypted yet!',
@@ -49,16 +44,44 @@ class Tokens extends Component {
     }
   }
 
+  onEdit = () => {
+    this.setState({showInput: !this.state.showInput})
+  }
+
+  onDecrypt = () => {
+    this.setState({showDecrypt: !this.state.showDecrypt})
+  }
+
 
   render() {
 
     const { Header, Row, HeaderCell, Body } = Table
 
-    return (
-      <Layout>
-        <Card>{this.renderRow()}</Card>
-      </Layout>
-    )
+    if (this.state) {
+      console.log(this.x);
+          return (
+            <Layout>
+              <Card>
+                {this.renderRow()}
+                {this.state.showInput ? <EditInput tokenId = {this.state.num} /> : null}
+                {this.state.showDecrypt ? <Decrypt
+                  tokenId = {this.state.num}
+                  data = {this.state.token}
+                 /> : null}
+                <Button onClick={this.onDecrypt}>Decrypt Data</Button>
+                <Button onClick={this.onEdit}>Edit Data</Button>
+              </Card>
+
+            </Layout>
+          )
+    } else {
+      return (
+        <Layout>
+          <Card>Loading!</Card>
+        </Layout>
+      )
+    }
+
   }
 }
 
