@@ -8,6 +8,10 @@ const CryptoJS = require("crypto-js")
 
 class EditInput extends Component {
 
+  componentWillMount() {
+    this.setState({decrypted: 'asdf'})
+  }
+
 
 
 onGo = async (event) => {
@@ -21,7 +25,7 @@ onGo = async (event) => {
     const num = parseInt(this.props.tokenId)
 
 
-    console.log(num);
+    // console.log(num);
     console.log(deseed);
 
     this.decrypt(deseed)
@@ -29,36 +33,43 @@ onGo = async (event) => {
 
 
   decrypt = async (deseed) => {
-
+  console.log(this.props);
   let ciphertext = this.props.data[0].split(':')[1]
   console.log(ciphertext);
 
   let bytes = CryptoJS.AES.decrypt(ciphertext, deseed);
   console.log(bytes);
-  let decryptedData = bytes.toString(CryptoJS.enc.Utf8)
-  console.log(decryptedData)
+  let decrypted = bytes.toString(CryptoJS.enc.Utf8)
+
+  this.setState({decrypted: decrypted})
 }
 
-render() {
-  return (
-    <Container>
-
-      <form id="tokenForm">
-        <div>
-          <h4>Enter Seed Phrase</h4>
-
-          <textarea id="deseed" rows="4" form="tokenForm"></textarea>
-        </div>
-        <div>
-          <button onClick={this.onGo}>
-            Decrypt Data
-          </button>
-        </div>
-      </form>
-
-    </Container>
-    )
+  render() {
+    if(this.state.decrypted !== 'asdf') {
+      return (
+        <Container>
+          <div> {this.state.decrypted} </div>
+        </Container>
+      )
+    } else {
+      return (
+        <Container>
+          <form id="tokenForm">
+            <div>
+              <h4>Enter Seed Phrase</h4>
+              <textarea id="deseed" rows="4" form="tokenForm"></textarea>
+            </div>
+            <div>
+              <button onClick={this.onGo}>
+                Decrypt Data
+              </button>
+            </div>
+          </form>
+        </Container>
+      )
+    }
   }
+
 }
 
 export default EditInput

@@ -32,15 +32,16 @@ class Tokens extends Component {
   renderRow() {
     if(this.state) {
       let x = this.state.token
+      console.log(x);
       let ownedToken = x.map((data) => {
         let parsedData = data.split(':')
           return {
             header: parsedData[0],
-            description:  parsedData[1] || 'No data encrypted yet!',
+            description:  <div style={{overflow : "auto"}} > {parsedData[1]} </div> || 'No data encrypted yet!',
             fluid: true
           }
         })
-        return <Card.Group items={ownedToken}/>
+        return <Card.Group  items={ownedToken}/>
     }
   }
 
@@ -58,7 +59,7 @@ class Tokens extends Component {
     const { Header, Row, HeaderCell, Body } = Table
 
     if (this.state) {
-      console.log(this.x);
+      console.log(this.state);
           return (
             <Layout>
               <Card>
