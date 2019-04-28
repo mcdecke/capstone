@@ -28,6 +28,7 @@
     "start": "node server.js",
     "eject": "react-scripts eject",
     "test": "mocha",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build": "next build"
   }
 }
